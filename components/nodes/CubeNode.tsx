@@ -1,17 +1,17 @@
 import { Handle, Position } from '@xyflow/react'
-import { ReactNode } from 'react'
+import { JSX } from 'react'
 
 interface CubeNodeProps {
   data: {
-    icon: ReactNode
+    icon: JSX.Element
     level: 'star' | 'macro' | 'category' | 'micro'
   }
-  selected?: boolean
+  onClick?: () => void
 }
 
-export default function CubeNode({ data, selected }: CubeNodeProps) {
+export default function CubeNode({ data, onClick }: CubeNodeProps) {
   const base =
-    "bg-zinc-900 border flex items-center justify-center cursor-pointer transition duration-200"
+    "bg-zinc-900 border flex items-center justify-center cursor-pointer transition duration-200 relative"
 
   const levelStyles =
     data.level === 'star'
@@ -22,15 +22,20 @@ export default function CubeNode({ data, selected }: CubeNodeProps) {
       ? "w-20 h-20 border-yellow-500 rounded-xl"
       : "w-12 h-12 border-green-500"
 
-  const selectedStyle = selected
-    ? "opacity-100 scale-105"
-    : "opacity-20"
-
   return (
-    <div className={`${base} ${levelStyles} ${selectedStyle}`}>
+    <div onClick={onClick} className={`${base} ${levelStyles}`}>
       {data.icon}
-      <Handle type="target" position={Position.Top} />
-      <Handle type="source" position={Position.Bottom} />
+
+      <Handle
+        type="target"
+        position={Position.Top}
+        style={{ opacity: 0, pointerEvents: 'none' }}
+      />
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        style={{ opacity: 0, pointerEvents: 'none' }}
+      />
     </div>
   )
 }
